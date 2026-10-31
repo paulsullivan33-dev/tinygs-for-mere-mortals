@@ -1,0 +1,37 @@
+TinyGS firmware build — attempt 1
+Date: 2026-10-31 (America/Chicago)
+Source: clone of https://github.com/G4lile0/tinyGS, tag 2603242, commit a311cedbf1a7bc1b203fd76f1a849cb453c1c439
+Tool: PlatformIO Core 6.2.0 in venv ~/workspace/tinygs-labwork/venv, PLATFORMIO_CORE_DIR=~/workspace/tinygs-labwork/piocore
+Command: pio run -e ESP32
+
+=== RESULT: FAILED after 930.28 s, before compiling any project code ===
+
+56:OSError: 'python git_rev_macro.py' exited 127:
+86:    raise OSError(f'{command!r} exited {cp.returncode}')
+DEBUG: Current (cmsis-dap) External (cmsis-dap, esp-bridge, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - framework-arduinoespressif32 @ 3.20017.241212+sha.dcc1105b 
+ - tool-esptoolpy @ 1.40501.0 (4.5.1) 
+ - toolchain-xtensa-esp32 @ 8.4.0+2021r2-patch5
+/bin/sh: 1: python: not found
+OSError: 'python git_rev_macro.py' exited 127:
+  File "/home/hatch/workspace/tinygs-labwork/venv/lib/python3.12/site-packages/platformio/builder/main.py", line 173:
+    env.SConscript("$BUILD_SCRIPT")
+  File "/home/hatch/workspace/tinygs-labwork/piocore/packages/tool-scons/scons-local-4.11.1/SCons/Script/SConscript.py", line 625:
+    return _SConscript(self.fs, *files, **subst_kw)
+
+========================= [FAILED] Took 930.28 seconds =========================
+
+Environment    Status    Duration
+-------------  --------  ------------
+ESP32          FAILED    00:15:30.276
+==================== 1 failed, 0 succeeded in 00:15:30.276 ====================
+
+=== Diagnosis ===
+platformio.ini line 17 puts "!python git_rev_macro.py" first in [env] build_flags.
+git_rev_macro.py shells out to "git describe --tags --always" and prints -DGIT_VERSION=...
+to stamp the firmware with the source revision. Exit 127 = command not found:
+this machine has python3 but no "python" on PATH. An environment gap, not a
+project defect (on a normal PlatformIO install, python resolves).
+Fix applied for attempt 2: a "python" symlink to the venv python3 on PATH.
+No project source files were modified.

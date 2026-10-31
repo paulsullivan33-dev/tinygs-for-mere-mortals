@@ -1,0 +1,29 @@
+TinyGS firmware build — attempt 2 (environment fixed with a python shim)
+Command: PATH=<labwork>/bin:$PATH pio run -e ESP32
+
+=== RESULT: FAILED after 101.55 s — this time in compilation ===
+
+47:/home/hatch/workspace/tinygs-labwork/src/tinyGS/tinyGS.ino:86:2: error: #error "You are not using the correct version of RadioLib please copy TinyGS/lib/RadioLib on Arduino/libraries"
+
+Environment    Status    Duration
+-------------  --------  ------------
+ESP32          FAILED    00:01:41.554
+==================== 1 failed, 0 succeeded in 00:01:41.554 ====================
+EXIT: 1
+
+=== Diagnosis ===
+tinyGS.ino (lines 85-87) guards the build:
+#if  RADIOLIB_VERSION_MAJOR != (0x07) || RADIOLIB_VERSION_MINOR != (0x06) || RADIOLIB_VERSION_PATCH != (0x00) || RADIOLIB_VERSION_EXTRA != (0x00)
+#error "You are not using the correct version of RadioLib please copy TinyGS/lib/RadioLib on Arduino/libraries"
+#endif
+
+The firmware requires RadioLib exactly 7.6.0.
+platformio.ini [env] lib_deps takes RadioLib from a moving git URL:
+    https://github.com/G4lile0/RadioLib.git      (fork HEAD)
+with the registry pin commented out directly above it:
+    ;jgromes/RadioLib @ 7.6.0
+Installed copy's library.json version: 7.8.1 — the fork's HEAD has drifted
+two minor versions past the guard since the release tag was cut.
+The release as committed therefore no longer builds unmodified today.
+Attempt 3 pins the fork at its own 7.6.0 commit via platformio_override.ini
+(a PlatformIO-sanctioned override file; no tracked project file is edited).

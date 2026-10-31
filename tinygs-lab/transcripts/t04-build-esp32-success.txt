@@ -1,0 +1,58 @@
+TinyGS firmware build — attempt 4 (SUCCESS)
+Date: 2026-10-31 (America/Chicago)
+Source clone: https://github.com/G4lile0/tinyGS
+Tag: 2603242   Commit: a311cedbf1a7bc1b203fd76f1a849cb453c1c439   (tag creatordate 2026-04-07)
+Tool: PlatformIO Core 6.2.0, venv on the roomy disk, PLATFORMIO_CORE_DIR=<labwork>/piocore
+Environment: ESP32 (board heltec_wifi_lora_32, platform espressif32 @ 6.10.0,
+framework arduino, partitions tinygs_4M_partition_table.csv)
+Scratch-clone deviation from the tag, disclosed: ONE line of platformio.ini —
+the RadioLib git URL gained the fragment #c778d8767d47e0bfb015dfd762d0699b0d5001fd
+(the project fork's own state on 2026-04-06, version 7.6.0, the version the
+firmware's #error guard requires and the ini names in its commented-out pin).
+A "python" symlink was added to PATH (attempt 1). No source code modified.
+Command: pio run -e ESP32   Duration: 619.24 s   Exit: 0
+
+=== Dependency graph (from the build log) ===
+Dependency Graph
+|-- Improv @ 1.2.7
+|-- RadioLib @ 7.6.0+sha.c778d876
+|-- ArduinoJson @ 6.17.2
+|-- HTTPClient @ 2.0.0
+|-- WiFi @ 2.0.0
+|-- WiFiClientSecure @ 2.0.0
+|-- AioP13 @ 1.0.1
+|-- ArduinoOTA @ 2.0.0
+|-- ESPmDNS @ 2.0.0
+|-- Update @ 2.0.0
+|-- PubSubClient @ 2.8
+|-- IotWebConf @ 3.0.1
+|-- Wire @ 2.0.0
+|-- ESP8266 and ESP32 OLED driver for SSD1306 displays @ 4.6.2
+|-- HTTPUpdate @ 2.0.0
+
+=== Size summary (verbatim) ===
+Checking size .pio/build/ESP32/firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [==        ]  20.1% (used 65872 bytes from 327680 bytes)
+RAM:   [==        ]  20.1% (used 65872 bytes from 327680 bytes)
+Flash: [========  ]  75.6% (used 1337497 bytes from 1769472 bytes)
+
+=== Result (verbatim tail) ===
+Successfully created esp32 image.
+======================== [SUCCESS] Took 619.24 seconds ========================
+
+Environment    Status    Duration
+-------------  --------  ------------
+ESP32          SUCCESS   00:10:19.238
+========================= 1 succeeded in 00:10:19.238 =========================
+EXIT: 0
+
+=== Artefacts ===
+1344208 /home/hatch/workspace/tinygs-labwork/src/.pio/build/ESP32/firmware.bin
+22472024 /home/hatch/workspace/tinygs-labwork/src/.pio/build/ESP32/firmware.elf
+f2fc6abda528e0846ab815b42c1d08c2e2e47d528d50ec9d7dc886a8a8e7e8ca  /home/hatch/workspace/tinygs-labwork/src/.pio/build/ESP32/firmware.bin
+The string "2603242" occurs in firmware.bin: the git_rev_macro.py stamp
+(git describe --tags --always) worked, so the binary carries its release tag.
+Flash budget check: 1,337,497 bytes used of the 1,769,472-byte (0x1B0000)
+OTA app slot defined in tinygs_4M_partition_table.csv — the size PlatformIO
+reports as "from 1769472 bytes" matches the partition table exactly.

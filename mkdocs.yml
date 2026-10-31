@@ -1,0 +1,29 @@
+site_name: TinyGS for Mere Mortals
+site_description: A tiny ground station for LoRa satellites. Building an ESP32 listener for the TinyGS network, the boards and antennas it needs, how it decides what to listen for, and what happens to every packet it hears, with the limits stated plainly.
+site_url: https://paulsullivan33-dev.github.io/tinygs-for-mere-mortals/
+copyright: 'Part of <a href="https://paulsullivan33-dev.github.io/mere-mortals/">For Mere Mortals</a> · Text CC BY 4.0, code MIT'
+
+# Guides live at the repo root (nice for GitHub browsing).
+# The deploy workflow copies them into docs/ before building.
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+  - What TinyGS Is: what-tinygs-is.md
+  - The Moving Parts: the-moving-parts.md
+  - The Boards: the-boards.md
+  - The Satellites: the-satellites.md
+  - Antennas and Placement: antennas-and-placement.md
+  - Installing TinyGS: installing-tinygs.md
+  - Your First Setup: your-first-setup.md
+  - Tuning — Who Decides What to Hear: tuning.md
+  - The Web Console and the World Map: the-web-console-and-the-map.md
+  - What a Received Packet Becomes: what-a-packet-becomes.md
+  - Building the Firmware Yourself: building-the-firmware-yourself.md
+  - Recipes: recipes.md
+  - The Neighbours: the-neighbours.md
+  - Limits: limits.md
+  - Troubleshooting: troubleshooting.md
+  - Glossary: glossary.md
+  - Writing Criteria: criteria.md

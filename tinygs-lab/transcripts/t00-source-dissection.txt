@@ -1,0 +1,85 @@
+t00 — Source dissection of the TinyGS firmware
+================================================
+Clone: https://github.com/G4lile0/tinyGS
+Checked out: tag 2603242, commit
+a311cedbf1a7bc1b203fd76f1a849cb453c1c439 (2026-04-07)
+
+What the project says it is (README.md):
+  "TinyGS is an open network of Ground Stations distributed
+  around the world to receive and operate LoRa satellites,
+  weather probes and other flying objects, using cheap and
+  versatile modules."
+  Based on ESP32 boards; compatible with SX126x and SX127x
+  LoRa modules. Licence: GPL-3.0.
+
+Build environments (platformio.ini, complete list):
+  ESP32              board heltec_wifi_lora_32, espressif32 6.10.0
+  ESP32-S3           board heltec_wifi_lora_32_V3 (pioarduino fork)
+  ESP32-S3-USB       same board, USB CDC on boot
+  ESP32-C3           board esp32-c3-devkitm-1
+  ESP32-LILYGO_SX1280 board lilygo-t3-s3, SX1280 2.4 GHz radio
+  One firmware serves many boards: the exact board is a
+  configuration choice made later in the web panel, and the
+  custom 4 MB partition table is tinygs_4M_partition_table.csv.
+
+Built-in board table (src/ConfigManager/ConfigManager.cpp):
+  29 named board variants in the boards[] array, each a row of
+  pin numbers plus a radio type. Names include:
+    433MHz / 863-928MHz HELTEC WiFi LoRA 32 V1 and V2
+    433MHz / 868-915MHz TTGO LoRa 32 v1 and v2
+    433MHz / 868-915MHz T-BEAM + OLED, T-BEAM V1.0 + OLED
+    433MHz / 868-915MHz FOSSA 1W Ground Station
+    433MHz / 868-915MHz LILYGO T3_V1.6.1 (+ TCXO variant)
+    150-960MHz HELTEC LORA32 V3 SX1262 (ESP32-S3)
+    2.4GHz LILYGO SX1280
+    Custom ESP32 / ESP32-S3 / ESP32-C3 builds
+  Radio chips appearing in the table: SX1278, SX1276, SX1262,
+  SX1268, SX1280. A "Board Template" text field in the panel
+  lets any other pinout be described without recompiling.
+
+Web panel served by the board itself (ConfigManager.cpp):
+  /            root (captive portal on first boot)
+  /config      configuration form (IotWebConf2)
+  /dashboard   station dashboard: status, console, world map
+  /restart     restart the board
+  /cs          console refresh feed
+  /wm          world map refresh feed
+  Dashboard user is always "admin" (wiki + config strings).
+
+The network path (src/Mqtt, src/ConfigManager):
+  MQTT broker default: mqtt.tinygs.com, port 8883 (TLS; the
+  firmware carries the ISRG root CA in src/certs.h).
+  Credentials are per-station: the board generates a one-time
+  code and fetches its MQTT user/password from
+  https://api.tinygs.com/credentials?otp=NNNNNN
+  (MQTT_credentials.cpp). The project's human route to the
+  same credentials: ask @tinygs_personal_bot on Telegram
+  with /mqtt after joining the community group.
+  Topics the board publishes (MQTT_Client.h):
+    .../welcome, .../ping, .../status, .../rx  (received
+    packets go out on the rx topic), plus command topics it
+    subscribes to — the server can retune the radio, ask for
+    status and push configuration back down the same pipe.
+  Firmware updates: https://ota.tinygs.com/updates/tinygs.bin
+
+Radio and tuning (src/Status.h, wiki Radio Tuning Guide):
+  Modem modes: LoRa, FSK, GMSK (also MSK, GFSK, OOK named in
+  the README history). The modem configuration is one JSON
+  string, e.g. the wiki's own worked example:
+    {"mode":"LoRa","freq":436.703,"bw":250.0,"sf":10,"cr":5,
+     "sw":18,"pwr":5,"cl":120,"pl":8,"gain":0,"crc":true,
+     "fldro":1,"sat":"Norbi","NORAD":46494}
+  With automatic tuning enabled, the server predicts passes
+  and retunes the station by itself; the firmware also applies
+  Doppler frequency compensation (Status.h: freqTol, freqComp).
+
+Satellites, from the project's own history (README.md):
+  FossaSAT-1 (Dec 2019, the satellite the project was born
+  for), Norby (Sep 2020), V-R3x (Jan 2021) — first receptions
+  by named community stations are recorded there.
+  Names real stations are heard listening for today (station
+  logs quoted in a community primer, see sources.txt):
+  FEES, FossaSat-2E series (2E1, 2E11, 2E13), Norbi, Norby-2,
+  SATLLA-2B, GaoFen-7, RS52SD. The live, changing list is
+  https://tinygs.com/satellites — satellites launch, fade and
+  are added, so the guide names examples, not a canon.

@@ -1,0 +1,17 @@
+TinyGS firmware build — attempt 3 (dependency pin via platformio_override.ini)
+Change: added platformio_override.ini pinning RadioLib to the fork commit
+c778d8767d47e0bfb015dfd762d0699b0d5001fd (fork state on 2026-04-06, the day
+before tag 2603242 was cut; its library.json and BuildOpt.h both say 7.6.0).
+Deleted the previously installed libdeps RadioLib and rebuilt.
+
+=== RESULT: FAILED after 36.92 s — same #error at tinyGS.ino:86 ===
+/home/hatch/workspace/tinygs-labwork/src/tinyGS/tinyGS.ino:86:2: error: #error "You are not using the correct version of RadioLib please copy TinyGS/lib/RadioLib on Arduino/libraries"
+
+=== Diagnosis ===
+The installed RadioLib was still 7.8.1 (library.json re-checked after the
+build). platformio_override.ini did not replace the lib_deps entry —
+PlatformIO merges lib_deps across config files, so both RadioLib specs
+were present and the unpinned git HEAD won. Override file removed.
+Attempt 4 instead pins the URL in the scratch clone platformio.ini —
+a one-line change to a build-configuration file in a throwaway clone,
+disclosed here and in chapter 11. No project source code is touched.

@@ -1,0 +1,48 @@
+Sources read for this guide (accessed 2026-10-30/31)
+
+Primary — the project's own code and words
+- Firmware source: https://github.com/G4lile0/tinyGS at tag 2603242,
+  commit a311cedbf1a7bc1b203fd76f1a849cb453c1c439 (cloned and built
+  in the lab; see transcripts/t01-build-esp32.txt)
+- README.md in that repo: definition, supported boards, install
+  routes, history (FossaSAT-1, Norby, V-R3x first receptions)
+- platformio.ini in that repo: the five build environments
+  (ESP32, ESP32-S3, ESP32-S3-USB, ESP32-C3, ESP32-LILYGO_SX1280)
+- tinyGS/src/ConfigManager/ConfigManager.cpp: the built-in board
+  table (29 named board variants), the web panel routes
+  (/, /config, /dashboard, /restart, /cs, /wm)
+- tinyGS/src/ConfigManager/ConfigManager.h: MQTT defaults
+  (mqtt.tinygs.com, port 8883), dashboard user "admin"
+- tinyGS/src/Mqtt/MQTT_credentials.cpp: credentials fetched from
+  https://api.tinygs.com/credentials?otp=... after a one-time
+  code; MQTT topics welcome/ping/status/rx in MQTT_Client.h
+- tinyGS/src/Status.h: modem modes LoRa/FSK/GMSK, Doppler
+  compensation fields
+- Wiki, Ground Station configuration:
+  https://github.com/G4lile0/tinyGS/wiki/Ground-Station-configuration
+  (first-boot AP "My TinyGS", panel at 192.168.4.1, every
+  configuration field explained, MQTT credentials via the
+  @tinygs_personal_bot Telegram bot, Enable TX licence warning)
+- Wiki, Radio Tuning Guide:
+  https://github.com/G4lile0/tinyGS/wiki/Radio-Tuning-Guide
+  (automatic tuning by the server; the modem configuration
+  string with worked LoRa and FSK examples)
+- Wiki, Quick Start:
+  https://github.com/G4lile0/tinyGS/wiki/Quick-Start
+  (web installer at https://installer.tinygs.com, Chrome/Edge)
+- OTA updates served from https://ota.tinygs.com/updates/tinygs.bin
+  (URL found in the firmware source)
+
+Project website (documented-only material: live map, station and
+satellite lists, personal area)
+- https://tinygs.com/ , https://tinygs.com/stations ,
+  https://tinygs.com/satellites , https://tinygs.com/packets
+- Telegram channels named by the project: community chat,
+  @tinyGS_Telemetry (station status and received packets),
+  @TinyGS_Test (test-mode packets)
+
+Corroboration for satellite names heard by real stations
+(station logs quoted in a community primer):
+- https://www.obriain.com/ei4lf/primers/LoRa/ (one station's
+  overnight log: FEES, GaoFen-7, FossaSat-2E13, Norbi, Norby-2,
+  RS52SD; device tracker names fossasat_2e11, satlla_2b)
